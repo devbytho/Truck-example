@@ -73,6 +73,10 @@
             color: var(--secondary);
         }
 
+        nav {
+            transition: var(--transition);
+        }
+
         nav ul {
             display: flex;
             list-style: none;
@@ -126,6 +130,58 @@
             display: none;
             font-size: 1.5rem;
             cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .mobile-menu:hover {
+            color: var(--secondary);
+        }
+
+        /* Mobile Navigation Styles */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-wrap: wrap;
+            }
+            
+            nav {
+                width: 100%;
+                margin-top: 15px;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.5s ease-in-out;
+            }
+            
+            nav.active {
+                max-height: 500px;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 0;
+                padding: 10px 0;
+            }
+            
+            nav ul li {
+                width: 100%;
+            }
+            
+            nav a {
+                display: block;
+                padding: 12px 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            nav a:last-child {
+                border-bottom: none;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            .cta-button {
+                display: none;
+            }
         }
 
         /* Hero Section */
@@ -543,29 +599,6 @@
         }
 
         @media (max-width: 768px) {
-            .header-content {
-                flex-wrap: wrap;
-            }
-            
-            nav {
-                width: 100%;
-                margin-top: 15px;
-                display: none;
-            }
-            
-            nav.active {
-                display: block;
-            }
-            
-            nav ul {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .mobile-menu {
-                display: block;
-            }
-            
             .hero h2 {
                 font-size: 2.2rem;
             }
@@ -842,9 +875,32 @@
     </footer>
 
     <script>
-        // Mobile menu toggle
+        // Mobile menu toggle with smooth animation
         document.querySelector('.mobile-menu').addEventListener('click', function() {
-            document.querySelector('nav').classList.toggle('active');
+            const nav = document.querySelector('nav');
+            nav.classList.toggle('active');
+            
+            // Change icon based on menu state
+            const icon = this.querySelector('i');
+            if (nav.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function() {
+                const nav = document.querySelector('nav');
+                if (nav.classList.contains('active')) {
+                    nav.classList.remove('active');
+                    document.querySelector('.mobile-menu i').classList.remove('fa-times');
+                    document.querySelector('.mobile-menu i').classList.add('fa-bars');
+                }
+            });
         });
         
         // Smooth scrolling for anchor links
@@ -861,9 +917,6 @@
                         top: targetElement.offsetTop - 80,
                         behavior: 'smooth'
                     });
-                    
-                    // Close mobile menu if open
-                    document.querySelector('nav').classList.remove('active');
                 }
             });
         });
